@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jelly with Wobbles - Create Your Video Chat Moment</title>
+    <meta name="description" content="Create your own jellyjelly video chat moment with Wobbles. Upload your image and download a beautiful split-screen mockup.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, hsl(211 100% 50%) 0%, hsl(211 90% 45%) 50%, hsl(211 95% 48%) 100%);
+            color: white;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        .container {
+            max-width: 42rem;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        .card {
+            background: hsl(211 90% 45%);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px -5px rgba(0,0,0,0.2);
+            margin-bottom: 2rem;
+        }
+        .input-field {
+            width: 100%;
+            padding: 0.625rem 0.75rem;
+            background: hsl(211 100% 50%);
+            border: 2px solid hsl(211 70% 65%);
+            border-radius: 0.375rem;
+            color: white;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+        .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .upload-area {
+            border: 2px dashed hsl(211 70% 65%);
+            border-radius: 0.75rem;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+            margin-top: 0.5rem;
+        }
+        .upload-area:hover {
+            border-color: white;
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .phone-mockup {
+            width: 360px;
+            height: 720px;
+            border-radius: 3rem;
+            padding: 0.75rem;
+            background: linear-gradient(145deg, hsl(220 10% 12%), hsl(220 10% 8%));
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+            margin: 0 auto;
+            position: relative;
+        }
+        .phone-notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10rem;
+            height: 1.75rem;
+            background: hsl(220 10% 8%);
+            border-radius: 0 0 1.5rem 1.5rem;
+            z-index: 10;
+        }
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: white;
+            border-radius: 2.5rem;
+            overflow: hidden;
+            position: relative;
+        }
+        .screen-half {
+            height: 50%;
+            position: relative;
+        }
+        .screen-half img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .watermark {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            z-index: 5;
+        }
+        .watermark p {
+            margin: 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
+        .handle {
+            color: white;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+        .app-name {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #4a5568, #2d3748);
+        }
+        .download-btn {
+            width: 100%;
+            max-width: 28rem;
+            padding: 0.75rem 1.5rem;
+            background: hsl(214 70% 48%);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 2rem auto 0;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+        .download-btn:hover {
+            background: hsl(214 70% 43%);
+        }
+        @media (max-width: 640px) {
+            .phone-mockup {
+                width: 320px;
+                height: 650px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header style="text-align: center; margin-bottom: 2rem;">
+            <h1 style="font-size: 3rem; font-weight: bold; margin: 0 0 0.75rem 0;">Jelly with Wobbles</h1>
+            <p style="font-size: 1.125rem; opacity: 0.9; margin: 0;">Create your own jellyjelly video chat moment</p>
+        </header>
+
+        <div class="card">
+            <div style="margin-bottom: 1rem;">
+                <label style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.5rem;">
+                    Your Handle (optional)
+                </label>
+                <input 
+                    type="text" 
+                    id="userHandle" 
+                    class="input-field" 
+                    placeholder="@myhandle"
+                >
+            </div>
+
+            <div>
+                <label style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.5rem;">
+                    Upload Your Image
+                </label>
+                <div class="upload-area" onclick="document.getElementById('imageUpload').click()">
+                    <input 
+                        type="file" 
+                        id="imageUpload" 
+                        accept="image/*" 
+                        style="display: none;"
+                        onchange="handleImageUpload(event)"
+                    >
+                    <svg style="width: 3rem; height: 3rem; margin: 0 auto 0.75rem; opacity: 0.7;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                    </svg>
+                    <p id="uploadText" style="font-size: 0.875rem; opacity: 0.8; margin: 0;">Click to upload your image</p>
+                </div>
+            </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; align-items: center;">
+            <div id="phoneRef" class="phone-mockup">
+                <div class="phone-notch"></div>
+                <div class="phone-screen">
+                    <!-- Top Half - Wobbles -->
+                    <div class="screen-half" style="background: #1a1a1a;">
+                        <img 
+                            src="https://pbs.twimg.com/media/G5ElK73XUAEWx6F?format=jpg&name=small" 
+                            alt="Wobbles"
+                            crossorigin="anonymous"
+                        >
+                        <div class="watermark">
+                            <p class="handle">@wobbles</p>
+                            <p class="app-name">jellyjelly</p>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Half - User -->
+                    <div id="userSection" class="screen-half" style="background: #2d3748;">
+                        <div class="placeholder">
+                            <svg style="width: 3rem; height: 3rem; opacity: 0.4;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                            </svg>
+                            <p style="color: rgba(255,255,255,0.4); font-size: 0.875rem; margin-top: 0.5rem;">Upload your image above</p>
+                        </div>
+                        <div id="userWatermark" class="watermark" style="display: none;">
+                            <p id="userHandleDisplay" class="handle" style="display: none;"></p>
+                            <p class="app-name">jellyjelly</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="download-btn" onclick="downloadJelly()">
+                <svg style="width: 1.25rem; height: 1.25rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                </svg>
+                Download Your Jelly
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let userImageData = null;
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    userImageData = e.target.result;
+                    const userSection = document.getElementById('userSection');
+                    userSection.innerHTML = `
+                        <img src="${userImageData}" alt="Your image" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div id="userWatermark" class="watermark">
+                            <p id="userHandleDisplay" class="handle" style="display: none;"></p>
+                            <p class="app-name">jellyjelly</p>
+                        </div>
+                    `;
+                    updateUserHandle();
+                    document.getElementById('uploadText').textContent = 'Image uploaded! Click to change';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        document.getElementById('userHandle').addEventListener('input', updateUserHandle);
+
+        function updateUserHandle() {
+            const handle = document.getElementById('userHandle').value.trim();
+            const handleDisplay = document.getElementById('userHandleDisplay');
+            
+            if (handleDisplay && handle) {
+                handleDisplay.textContent = handle.startsWith('@') ? handle : `@${handle}`;
+                handleDisplay.style.display = 'block';
+            } else if (handleDisplay) {
+                handleDisplay.style.display = 'none';
+            }
+        }
+
+        async function downloadJelly() {
+            const phoneElement = document.getElementById('phoneRef');
+            
+            try {
+                const canvas = await html2canvas(phoneElement, {
+                    backgroundColor: null,
+                    scale: 2,
+                    logging: false,
+                    useCORS: true,
+                    allowTaint: true
+                });
+
+                const link = document.createElement('a');
+                link.download = 'jelly-with-wobbles.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            } catch (error) {
+                alert('Failed to generate image. Please try again.');
+                console.error('Download error:', error);
+            }
+        }
+    </script>
+</body>
+</html>
